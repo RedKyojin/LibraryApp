@@ -214,18 +214,25 @@ namespace LibraryApp
 
         static void OverdueReport(LibraryContext db)
         {
-            var overdue = db.Resources
-                .Where(r => r.DueDate != null && r.DueDate < DateTime.Now)
-                .ToList();
-            if (!overdue.Any())
-            {
-                Console.WriteLine("No overdue items. All good!");
-                return;
-            }
-            Console.WriteLine("Overdue items:");
-            foreach (var r in overdue)
-                Console.WriteLine(
-                  $"  {r.Id}) {r.Title} - due {r.DueDate:yyyy-MM-dd}");
+           Console.WriteLine("Overdue items:");
+    bool any = false;
+
+    // Manually loop through each resource
+    foreach (var r in db.Resources)
+    {
+        if (r.DueDate != null && r.DueDate < DateTime.Now)
+        {
+            Console.WriteLine("  " + r.Id
+                + ") " + r.Title
+                + " - due " + r.DueDate.Value.ToString("yyyy-MM-dd"));
+            any = true;
+        }
+    }
+
+    if (!any)
+    {
+        Console.WriteLine("No overdue items. All good!");
+    }
         }
         //To list all resources of a specific genre
         static void ReportByGenre(LibraryContext db)
